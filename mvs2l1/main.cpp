@@ -172,6 +172,24 @@ void runInterpolation(int n, int func, bool cheb, string name)
     output(res, name);
     logError(err(res,func),n,func,cheb);
 }
+
+
+void runErrors(int func, string name)
+{
+    ofstream fout(name);
+    for(int i=3; i<=30; i++)
+    {
+        vector <double> X(i);
+        vector <double> Y(i);
+        fillValuesEquidistant(X,Y,X.size(), func);
+        pair<vector<double>,vector<double>> res = interpolate(X,Y);
+        double eqerr = err(res,func);
+        fillValuesChebyshev(X,Y,X.size(), func);
+        res = interpolate(X,Y);
+        double cheberr = err(res,func);
+        fout << i << ';'<<eqerr << ';'<<cheberr <<';';
+    }
+}
 int main()
 {
     ///Function 1
@@ -189,5 +207,8 @@ int main()
     runInterpolation(10,2,1,"cheb2-10.txt");
     runInterpolation(20,2,0,"equid2-20.txt");
     runInterpolation(20,2,1,"cheb2-20.txt");
+    ///errors
+    runErrors(1,"ErrorsF1.txt");
+    runErrors(2,"ErrorsF2.txt");
     return 0;
 }
