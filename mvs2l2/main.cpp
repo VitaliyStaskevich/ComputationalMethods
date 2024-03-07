@@ -40,21 +40,16 @@ SplineSet contructSOLAE(vector <double>& x, vector <double>& y)
     vector <double> xNew(n,0);
     for(int i=1; i<n-1; i++)
     {
-        if(i!=0)
-        {
-            b[i]=h/6.0;
-        }
+        b[i]=h/6.0;
         a[i]= (2.0*h)/3.0;
-        if(i!=n-2)
-        {
-            c[i]= h/6.0;
-        }
+        c[i]= h/6.0;
+
         xNew[i] = ((y[i+1]-y[i])/h) - ((y[i]-y[i-1])/h);
     }
     ///Additional conditions
     c[0] = h/6.0;
     a[0] = h/3.0;
-    xNew[0] = (y[1]-y[0])/h - cond1;
+    xNew[0] = ((y[1]-y[0])/h) - cond1;
     ///
     b[n-1] = h/6.0;
     a[n-1] = h/3.0;
