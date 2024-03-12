@@ -9,7 +9,7 @@ using namespace std;
 
 const double  a = -3;
 const double  b =  3;
-const int N = 15;
+const int N = 30;
 struct SplineSet{
     vector <double> a;
     vector <double> b;
