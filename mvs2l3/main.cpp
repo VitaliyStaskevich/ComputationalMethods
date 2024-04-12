@@ -23,7 +23,7 @@ double F(double x)
     return sqrt((9-2*x)/(2*x-21));
 }
 
-
+///t1
 double middleRectangles(int N)
 {
     double h = (b-a)/N;
@@ -112,7 +112,7 @@ double Runge(Func func)
         fout << "N = 4;" << "h=(b-a)/4;";
         fout << "Q_h/2 = " << Qcurr << ";";
         fout << "R_h/2 = " << R << ";" << abs(I-Qcurr)<<";";
-        cout << R << endl << eps;
+
         while(R >= eps)
         {
             Qprev = Qcurr;
@@ -127,9 +127,31 @@ double Runge(Func func)
         return Qcurr;
     }
 }
+
+///t2
+
+const int n = 5;
+const vector <double> points {-0.9061798459386640, -0.5384693101056831, 0.0, 0.5384693101056831, 0.9061798459386640};
+const vector <double> weights { 0.2369268850561891, 0.4786286704993665, 0.5688888888888889, 0.4786286704993665, 0.2369268850561891};
+
+double gaussianQuadrature()
+{
+    double A = (b - a) / 2.0;
+    double B = (b + a) / 2.0;
+
+    double sum = 0.0;
+    for (int i = 0; i < n; ++i) {
+        sum += weights[i] * F(A * points[i] + B);
+    }
+
+    return A*sum;
+}
 int main()
 {
     Runge(middle);
     Runge(simpson);
+    ///
+    cout << setprecision(15) << gaussianQuadrature() << endl;
+    cout << fixed << setprecision(15) << abs(gaussianQuadrature()-I);
     return 0;
 }
