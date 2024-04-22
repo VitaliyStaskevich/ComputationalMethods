@@ -85,12 +85,12 @@ double Runge(Func func)
         {
             Qprev = Qcurr;
             Qcurr = middleRectangles(k);
-            k*=2;
             R = abs((Qcurr-Qprev)/denom);
 
             fout << "N = " << k << ";" << "h=(b-a)/" << k << ";";
             fout << "Q_h/"<< k/2 << " = " << setprecision(precision) << Qcurr << ";";
             fout << "R_h/"<< k/2 << " = " << R << ";" << abs(I-Qcurr)<<";";
+            k*=2;
         }
         fout.close();
         return Qcurr;
@@ -117,11 +117,11 @@ double Runge(Func func)
         {
             Qprev = Qcurr;
             Qcurr = Simpson(k);
-            k*=2;
             R = abs((Qcurr-Qprev)/denom);
             fout << "N = " << k << ";" << "h=(b-a)/" << k << ";";
             fout << "Q_h/"<< k/2 << " = " << setprecision(precision) << Qcurr << ";";
             fout << "R_h/"<< k/2 << " = " << R << ";" << abs(I-Qcurr)<<";";
+            k*=2;
         }
         fout.close();
         return Qcurr;
@@ -151,6 +151,7 @@ int main()
     Runge(middle);
     Runge(simpson);
     ///
+
     cout << setprecision(15) << gaussianQuadrature() << endl;
     cout << fixed << setprecision(15) << abs(gaussianQuadrature()-I);
     return 0;
