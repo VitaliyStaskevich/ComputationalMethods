@@ -3,7 +3,6 @@
 This repository contains an implementation of the second lab work, namely `Cubic spline interpolation`
 
 # Overview
-Overview
 This program performs cubic spline interpolation using equidistant nodes.
 The results of the interpolation and the associated errors are written to output files.
 The primary objective is to assess the interpolation errors when using cubic splines.
