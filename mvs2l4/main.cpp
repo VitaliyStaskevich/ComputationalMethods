@@ -108,7 +108,7 @@ vector <point> implicitTrapezoidalMethod()
     return solution;
 }
 
-vector <point> adamsBashforthMethod()
+/*vector <point> adamsBashforthMethod()
 {
     vector<point> solution;
     double x = a;
@@ -128,12 +128,54 @@ vector <point> adamsBashforthMethod()
         double y_prev = solution[solution.size() - 2].y;
         double f_n = f(x, y);
         double f_n_prev = f(x_prev, y_prev);
-        y += (h / 2.0) * (3.0 * f_n - f_n_prev);
+
+        double yExpl = y + (h / 2.0) * (3.0 * f_n - f_n_prev);
+        ///корректорный
         x += h;
+        double yImpl = y + (h/2.0)*(f(x,y)+f_n);
+        y = yImpl;
         solution.push_back({x, y});
     }
      return solution;
 
+}
+*/
+vector <point> adamsBashforthMethod()
+{
+ vector<point> solution;
+    double x = a;
+    double y = u0;
+    solution.push_back({x, y});
+
+    ///RK2
+    double k1 = h * f(x, y);
+    double k2 = h * f(x + h / 2.0, y + k1 / 2.0);
+    y += k2;
+    x += h;
+    solution.push_back({x, y});
+
+    ///ABM
+    while (x < b) {
+
+
+        double x_prev = solution[solution.size() - 2].x;
+        double y_prev = solution[solution.size() - 2].y;
+        double f_n_prev = f(x_prev, y_prev);
+        double f_n = f(x, y);
+
+        /// Predictor
+        double yPred = y + (h / 2.0) * (3.0 * f_n - f_n_prev);
+
+        /// Corrector
+        double f_nPred = f(x + h, yPred);
+        double yCorr = y + (h / 2.0) * (f_n + f_nPred);
+        x += h;
+        y = yCorr;
+
+        solution.push_back({x, y});
+    }
+
+    return solution;
 }
 
 double err(vector<point>& solution)
@@ -166,6 +208,7 @@ struct RungeErrors{
     double ABM;
 };
 
+/*
 RungeErrors Runge(vector<point>& MPM,
                   vector<point>& ITM,
                   vector<point>& ABM){
@@ -184,7 +227,26 @@ RungeErrors Runge(vector<point>& MPM,
     }
     return {maxMPM, maxITM, maxABM};
 }
+*/
 
+RungeErrors Runge(vector<point>& MPM,
+                  vector<point>& ITM,
+                  vector<point>& ABM){
+    h*=2;
+    vector <point> resultMPM2 = midpointMethod();
+    vector <point> resultITM2 = implicitTrapezoidalMethod();
+    vector <point> resultABM2 = adamsBashforthMethod();
+    double maxMPM = INT_MIN;
+    double maxITM = INT_MIN;
+    double maxABM = INT_MIN;
+    for(int i = 0; i<MPM.size(); i+=2)
+    {
+        if(abs((MPM[i].y-resultMPM2[i/2].y)/3)>maxMPM) maxMPM = abs(MPM[i].y-resultMPM2[i/2].y)/3;
+        if(abs((ITM[i].y-resultITM2[i/2].y)/3)>maxITM) maxITM = abs(ITM[i].y-resultITM2[i/2].y)/3;
+        if(abs((ABM[i].y-resultABM2[i/2].y)/3)>maxABM) maxABM = abs(ABM[i].y-resultABM2[i/2].y)/3;
+    }
+    return {maxMPM, maxITM, maxABM};
+}
 void constuctTable(string name,
                   vector<point>& MPM,
                   vector<point>& ITM,
